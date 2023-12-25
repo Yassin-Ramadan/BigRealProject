@@ -2,6 +2,7 @@
 
 int main() {
 	BigReal x("0.02154*/");
-	std::cout << x;
+	BigReal y;
+	std::cout << (x != y);
 	return 0;
 }

@@ -10,7 +10,15 @@ class BigReal {
 public:
 	BigReal();
 	BigReal(std::string);
-	friend std::ostream& operator << (std::ostream& out, BigReal& b);
+	friend std::ostream& operator << (std::ostream& , BigReal& );
+	BigReal operator+(BigReal& );
+	BigReal operator-(BigReal&);
+	bool operator<(BigReal&);
+	bool operator>(BigReal&);
+	bool operator<=(BigReal&);
+	bool operator>=(BigReal&);
+	bool operator==(BigReal&);
+	bool operator!=(BigReal&);
 
 
 };

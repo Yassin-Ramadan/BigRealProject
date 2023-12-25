@@ -63,3 +63,25 @@ std::ostream& operator << (std::ostream& out, BigReal& b) {
 	out << b.integer << '.' << b.fraction;
 	return out;
 }
+// '-' > '+' ---> 45 > 43
+
+bool BigReal::operator<(BigReal& b) {
+	return true;
+}
+bool BigReal::operator>(BigReal& b) {
+	return true;
+}
+
+bool BigReal::operator<=(BigReal& b) { return true; }
+bool BigReal::operator>=(BigReal& b) { return true; }
+
+bool BigReal::operator==(BigReal& b) {
+	if (sign == b.sign && integer == b.integer && fraction == b.fraction && pointIndex == b.pointIndex) 
+		return true;
+	return false;
+}
+bool BigReal::operator!=(BigReal& b) {
+	if (!(sign == b.sign && integer == b.integer && fraction == b.fraction && pointIndex == b.pointIndex))
+		return true;
+	return false;
+}
