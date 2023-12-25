@@ -1,6 +1,7 @@
 #include "BigReal.h"
 
 int main() {
-	std::cout << "Start\n";
+	BigReal x("0.02154*/");
+	std::cout << x;
 	return 0;
 }
