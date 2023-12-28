@@ -99,8 +99,8 @@ bool BigReal::operator <(BigReal& b) {
 			else if (state == -1)
 				return true;
 			else {
-				state = isGreaterOrSmaller(fraction, b.fraction); // 1, -1 only!
-				if (state == 1)
+				state = fraction > b.fraction ? 1 : 0; // 1, -1 only!
+				if (state)
 					return false;
 				else
 					return true;
@@ -144,3 +144,66 @@ bool BigReal::operator ==(BigReal& b) {
 bool BigReal::operator !=(BigReal& b) {	
 	return !(operator ==(b));
 }
+
+BigReal BigReal::operator +(BigReal& b){
+	std::string intPart, fractionPart;
+	if (sign == b.sign) {
+		int remainder(0);
+		char digit;
+		if (fraction.size() > b.fraction.size()) {
+			for (int i{int(fraction.size()) - 1}, ii; i > -1; i--) {
+				if (i >= int(b.fraction.size()))
+					digit = '0';
+				else
+					digit = b.fraction[i];
+				ii = remainder + fraction[i] + digit - 2 * 48;
+				fractionPart.push_back(ii % 10 + 48);
+				remainder = ii / 10;
+			}
+		}
+		else {
+			for (int i{ int(b.fraction.size()) - 1}, ii; i > - 1; i--) {
+				if (i >= int(fraction.size()))
+					digit = '0';
+				else
+					digit = fraction[i];
+				ii = remainder + b.fraction[i] + digit - 2 * 48;
+				fractionPart.push_back(ii % 10 + 48);
+				remainder = ii / 10;
+			}
+		}
+		
+		
+		for (int i{ 0 }, ii; i < std::max(integer.size(), b.integer.size()); i++) {
+			if (i < std::min(integer.size(), b.integer.size())) {
+				ii = remainder + integer[i] + b.integer[i] - 2 * 48;
+				intPart.push_back(ii % 10 + 48);
+				remainder = ii / 10;
+			}
+			else {
+				if (integer.size() > b.integer.size()) {
+					ii = remainder + integer[i] - 48;
+					intPart.push_back(ii % 10 + 48);
+					remainder = ii / 10;
+				}
+				else {
+					ii = remainder + b.integer[i] - 48;
+					intPart.push_back(ii % 10 + 48);
+					remainder = ii / 10;
+				}
+			}
+		}
+		if (remainder)
+			intPart.push_back('1');
+		std::reverse(intPart.begin(), intPart.end());
+		std::reverse(fractionPart.begin(), fractionPart.end());
+		return BigReal(sign + intPart + '.' + fractionPart);
+	}
+	else {
+		// call -
+	}
+}
+
+//BigReal BigReal::operator -(BigReal& b){
+	
+//}
