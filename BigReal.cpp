@@ -15,9 +15,11 @@ bool BigReal::isValid(std::string input) {
 	}
 	return true;
 }
+
 BigReal::BigReal() {
 	integer = fraction = "0", pointIndex = 1, sign = '+';
 }
+
 BigReal::BigReal(std::string input) {
 	if (!isValid(input)) {
 		std::cout << "Invalid Number\n";
@@ -63,25 +65,82 @@ std::ostream& operator << (std::ostream& out, BigReal& b) {
 	out << b.integer << '.' << b.fraction;
 	return out;
 }
+
 // '-' > '+' ---> 45 > 43
+// 1 --> integer > b.integer, -1 --> integer < b.integer, 0 --> integer == b.integer
 
-bool BigReal::operator<(BigReal& b) {
-	return true;
+int BigReal::isGreaterOrSmaller(std::string& a, std::string& b){
+	if (a.size() > b.size())
+		return 1;
+	else if (a.size() == b.size()) {
+		if (a > b)
+			return 1;
+		else if (a == b)
+			return 0;
+		else
+			return -1;
+	}
+	else
+		return -1;
 }
-bool BigReal::operator>(BigReal& b) {
-	return true;
+
+bool BigReal::operator <(BigReal& b) {
+	if(operator ==(b))
+		return false;
+	if (sign > b.sign)
+		return true;
+	else if (sign < b.sign)
+		return false;
+	else {
+		if (sign == '+') {
+			int state = isGreaterOrSmaller(integer, b.integer);
+			if (state == 1)
+				return false;
+			else if (state == -1)
+				return true;
+			else {
+				state = isGreaterOrSmaller(fraction, b.fraction); // 1, -1 only!
+				if (state == 1)
+					return false;
+				else
+					return true;
+			}
+		}
+		else{
+			int state = isGreaterOrSmaller(integer, b.integer);
+			if (state == 1)
+				return true;
+			else if (state == -1)
+				return false;
+			else {
+				state = isGreaterOrSmaller(fraction, b.fraction); // 1, -1 only!
+				if (state == 1)
+					return true;
+				else
+					return false;
+			}
+		}
+	}
 }
 
-bool BigReal::operator<=(BigReal& b) { return true; }
-bool BigReal::operator>=(BigReal& b) { return true; }
+bool BigReal::operator >(BigReal& b) {
+	return (operator !=(b) && !operator <(b));
+}
 
-bool BigReal::operator==(BigReal& b) {
+bool BigReal::operator <=(BigReal& b) { 
+	return (operator ==(b) || operator <(b));
+}
+
+bool BigReal::operator >=(BigReal& b) {
+	return (operator ==(b) || operator >(b)); 
+}
+
+bool BigReal::operator ==(BigReal& b) {
 	if (sign == b.sign && integer == b.integer && fraction == b.fraction && pointIndex == b.pointIndex) 
 		return true;
 	return false;
 }
-bool BigReal::operator!=(BigReal& b) {
-	if (!(sign == b.sign && integer == b.integer && fraction == b.fraction && pointIndex == b.pointIndex))
-		return true;
-	return false;
+
+bool BigReal::operator !=(BigReal& b) {	
+	return !(operator ==(b));
 }
